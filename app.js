@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const path = require('path');
 
+const userRouter = require('./routes/user')
 const formRouter = require('./routes/form')
 
 const app = express()
@@ -14,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'views')));
 
 
+app.use('/user',userRouter)
 app.use(formRouter)
 
 
