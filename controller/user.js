@@ -1,6 +1,8 @@
 const User = require('../models/Users')
 const path = require('path')
 const bcrypt = require('bcrypt')
+var jwt = require('jsonwebtoken');
+
 exports.showLogin = (req,res,next)=>{
     res.sendFile(path.join(__dirname,'../views','signup','signin.html'))
 }
@@ -21,17 +23,26 @@ exports.submitLogin = (req,res,next)=>{
 
             //comparing password with has in db
             bcrypt.compare(login.password,user.password).then(result=>{
-                console.log("rsult ",result)
+                console.log("rsult ",result,"user.id: ",user.id)
                 if(result==false){
                     res.status(401).json({
                         success:false,
                         message:"User Not Authorized"
                     })
                 }else{
+
+                    //create jwt token now
+
+                    
+                    var token = jwt.sign({ id: user.id }, 'SecretAdiKumar');
+
+                    
                     res.status(200).json({
                         success:true,
-                        message:"User is succesfuly logged in"
+                        message:"User is succesfuly logged in",
+                        token:token
                     })
+
                     // res.redirect('/expense/')
                 }
             })

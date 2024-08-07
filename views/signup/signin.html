@@ -110,11 +110,8 @@
                 messageTag.remove()
               },3000)
             }else{
-              // messageTag.textContent = "Logged in succesfully"
-              // messageTag.id = "success"
-
+              localStorage.setItem('token',result.data.token)
               window.location.href = "http://localhost:3002/expense"
-
             }
 
           })

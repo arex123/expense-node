@@ -1,5 +1,6 @@
 const serverURI = "http://localhost:3002/";
 function handleExpenseSubmit(event) {
+  let token = localStorage.getItem('token')
   event.preventDefault();
   const data = {
     amount: event.target.amount.value,
@@ -7,8 +8,13 @@ function handleExpenseSubmit(event) {
     category: event.target.category.value,
   };
   console.log("10")
+  console.log("toekn ",token)
   axios
-    .post(serverURI+'expense/submit-form', data)
+    .post(serverURI+'expense/submit-form', data,{
+      headers: {
+        "Authorization": token
+      }
+    })
     .then((response) => {
       displayUserOnScreen(response.data);
       // Clearing the input fields
@@ -43,7 +49,12 @@ function displayUserOnScreen(userDetails) {
 
     console.log("idd dele: ",event.target.parentElement.id)
 
-    axios.delete(serverURI+"expense/remove/"+event.target.parentElement.id)
+    let token = localStorage.getItem('token')
+
+    axios.delete(serverURI+"expense/remove/"+event.target.parentElement.id,
+      { headers: {
+      "Authorization": token
+    }})
     .then((d)=>{
       console.log("deleted ",d)
       userList.removeChild(event.target.parentElement);
@@ -52,7 +63,11 @@ function displayUserOnScreen(userDetails) {
   });
 
   editBtn.addEventListener("click", function (event) {
-    axios.delete(serverURI+"expense/remove/"+event.target.parentElement.id)
+    axios.delete(serverURI+"expense/remove/"+event.target.parentElement.id,{
+      headers: {
+        "Authorization": token
+      }
+    })
     .then((d)=>{
       console.log("deleted ",d)
 
@@ -67,7 +82,12 @@ function displayUserOnScreen(userDetails) {
 
 document.addEventListener("DOMContentLoaded", () => {
   // let ullist = document.querySelector('ul')
-  axios.get(serverURI+"expense/getAll")
+  let token = localStorage.getItem('token')
+  axios.get(serverURI+"expense/getAll",{
+    headers: {
+      "Authorization": token
+    }
+  })
   .then((d)=>{
     console.log("data ",d.data)
     let details = d.data

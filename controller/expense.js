@@ -8,10 +8,11 @@ exports.showForm = (req,res,next)=>{
 exports.submitForm = (req,res,next)=>{
     const data = req.body
     console.log("submitting form data: ",data)
-    Expense.create({
-        amount:req.body.amount,
-        description:req.body.description,
-        category:req.body.category
+    // Expense.create({
+    req.user.createExpense({
+        amount:data.amount,
+        description:data.description,
+        category:data.category
     }).then((data)=>{
         res.json(data)
     }).catch(e=>{
@@ -20,7 +21,7 @@ exports.submitForm = (req,res,next)=>{
 }
 
 exports.getAll = (req,res,next)=>{
-    Expense.findAll()
+    req.user.getExpenses()
     .then(data=>{
         res.json(data)
     }).catch(e=>{
@@ -30,7 +31,7 @@ exports.getAll = (req,res,next)=>{
 
 exports.removeExpenseById = (req,res,next)=>{
     console.log("Expense to delete ",req.params,"body : ",req.body)
-    Expense.findByPk(req.params.id).then(expense=>{
+    Expense.findByPk(req.user.id).then(expense=>{
         return expense.destroy()
     }).then((d)=>{
         res.json(d)
