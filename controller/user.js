@@ -1,5 +1,11 @@
 const User = require('../models/Users')
 const path = require('path')
+
+exports.showLogin = (req,res,next)=>{
+    res.sendFile()
+}
+
+
 exports.showSignup = (req,res)=>{
     res.sendFile(path.join(__dirname,'../views','signup','signup.html'))
 }

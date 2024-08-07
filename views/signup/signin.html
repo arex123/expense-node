@@ -23,7 +23,7 @@
       box-sizing: border-box;
     }
 
-    .signupbutton {
+    .loginbutton {
       width: 100%;
       background-color: #4caf50;
       color: white;
@@ -34,7 +34,7 @@
       cursor: pointer;
     }
 
-    .signupbutton:hover {
+    .loginbutton:hover {
       background-color: #45a049;
     }
 
@@ -55,21 +55,28 @@
     #failed{
       color:red;
     }
+    .createNew{
+        color: blue;
+        cursor: pointer;
+    }
+    .createNew:hover{
+        text-decoration: underline;
+    }
   </style>
   <body>
     <div class="container">
-      <h3>SignUp Form</h3>
+      <h3>Login Form</h3>
       <form onsubmit="handleSubmit(event)">
-        <label for="name">Enter Name:</label>
-        <input type="text" class="inp" id="name" name="name" required />
-
+       
         <label for="email">Enter Email:</label>
         <input type="email" class="inp" id="email" name="email" />
 
         <label for="password">Enter Password:</label>
         <input type="password" class="inp" id="password" name="password" />
 
-        <button type="submit" class="signupbutton">Submit</button>
+        <button type="submit" class="loginbutton">Login</button>
+
+        <p class="createNew">create new account</p>
 
       </form>
     </div>
@@ -88,11 +95,11 @@
           password: event.target.password.value,
         };
 
-        let signupbuttontag = document.querySelector('.signupbutton')
+        let loginbuttontag = document.querySelector('.loginbutton')
         let messageTag = document.createElement('p')
 
         axios
-          .post("http://localhost:3002/user/signup", data)
+          .post("http://localhost:3002/user/signin", data)
           .then((result) => {
             console.log(result);
             if(result.data?.error){
@@ -103,7 +110,7 @@
               messageTag.id = "success"
             }
 
-            signupbuttontag.appendChild(messageTag)
+            loginbuttontag.appendChild(messageTag)
 
             let time = setTimeout(()=>{
               messageTag.remove()
@@ -113,7 +120,7 @@
             
             messageTag.textContent = "Something went wrong"
             messageTag.id = "failed"
-            signupbuttontag.appendChild(messageTag)
+            loginbuttontag.appendChild(messageTag)
 
             
             let time = setTimeout(()=>{
