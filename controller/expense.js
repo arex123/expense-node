@@ -2,7 +2,7 @@ const path = require('path');
 const Expense = require('../models/expense')
 
 exports.showForm = (req,res,next)=>{
-    res.sendFile(path.join(__dirname, 'views', 'index.html'));
+    res.sendFile(path.join(__dirname, '../views', 'index.html'));
 }
 
 exports.submitForm = (req,res,next)=>{

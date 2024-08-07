@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const userRouter = require('./routes/user')
-const formRouter = require('./routes/form')
+const expenseRouter = require('./routes/expense')
 
 const app = express()
 const sequelize = require('./utils/database')
@@ -12,11 +12,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 
-app.use(express.static(path.join(__dirname, 'views')));
+app.use(express.static(path.join(__dirname, 'views'))); //for serving css files
 
 
 app.use('/user',userRouter)
-app.use(formRouter)
+app.use('/expense',expenseRouter)
 
 
 

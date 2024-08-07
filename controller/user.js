@@ -32,6 +32,7 @@ exports.submitLogin = (req,res,next)=>{
                         success:true,
                         message:"User is succesfuly logged in"
                     })
+                    // res.redirect('/expense/')
                 }
             })
 

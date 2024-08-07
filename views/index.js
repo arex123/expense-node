@@ -1,6 +1,5 @@
 const serverURI = "http://localhost:3002/";
-
-function handleFormSubmit(event) {
+function handleExpenseSubmit(event) {
   event.preventDefault();
   const data = {
     amount: event.target.amount.value,
@@ -9,9 +8,8 @@ function handleFormSubmit(event) {
   };
   console.log("10")
   axios
-    .post(serverURI+'submit-form', data)
+    .post(serverURI+'expense/submit-form', data)
     .then((response) => {
-        console.log("13")
       displayUserOnScreen(response.data);
       // Clearing the input fields
       document.getElementById("amount").value = "";
@@ -45,7 +43,7 @@ function displayUserOnScreen(userDetails) {
 
     console.log("idd dele: ",event.target.parentElement.id)
 
-    axios.delete(serverURI+"remove/"+event.target.parentElement.id)
+    axios.delete(serverURI+"expense/remove/"+event.target.parentElement.id)
     .then((d)=>{
       console.log("deleted ",d)
       userList.removeChild(event.target.parentElement);
@@ -54,7 +52,7 @@ function displayUserOnScreen(userDetails) {
   });
 
   editBtn.addEventListener("click", function (event) {
-    axios.delete(serverURI+"remove/"+event.target.parentElement.id)
+    axios.delete(serverURI+"expense/remove/"+event.target.parentElement.id)
     .then((d)=>{
       console.log("deleted ",d)
 
@@ -69,7 +67,7 @@ function displayUserOnScreen(userDetails) {
 
 document.addEventListener("DOMContentLoaded", () => {
   // let ullist = document.querySelector('ul')
-  axios.get(serverURI+"getAll")
+  axios.get(serverURI+"expense/getAll")
   .then((d)=>{
     console.log("data ",d.data)
     let details = d.data

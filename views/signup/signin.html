@@ -104,19 +104,22 @@
             if(result.data?.error){
               messageTag.textContent = result.data?.error
               messageTag.id = "failed"
+              loginbuttontag.parentElement.appendChild(messageTag)
+  
+              let time = setTimeout(()=>{
+                messageTag.remove()
+              },3000)
             }else{
-              messageTag.textContent = "Logged in succesfully"
-              messageTag.id = "success"
+              // messageTag.textContent = "Logged in succesfully"
+              // messageTag.id = "success"
+
+              window.location.href = "http://localhost:3002/expense"
+
             }
 
-            loginbuttontag.parentElement.appendChild(messageTag)
-
-            let time = setTimeout(()=>{
-              messageTag.remove()
-            },3000)
           })
           .catch(err => {
-            console.log("err ",err.response.data.message)
+            console.log("err ",err)
             
             messageTag.textContent = err.response.data.message
             messageTag.id = "failed"
