@@ -103,7 +103,7 @@
               messageTag.id = "success"
             }
 
-            signupbuttontag.appendChild(messageTag)
+            signupbuttontag.parentElement.appendChild(messageTag)
 
             let time = setTimeout(()=>{
               messageTag.remove()
@@ -113,7 +113,7 @@
             
             messageTag.textContent = "Something went wrong"
             messageTag.id = "failed"
-            signupbuttontag.appendChild(messageTag)
+            signupbuttontag.parentElement.appendChild(messageTag)
 
             
             let time = setTimeout(()=>{
