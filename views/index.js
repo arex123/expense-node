@@ -99,3 +99,18 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 });
 
+
+// let buyPremiunBtn = document.querySelector('.buy-premium')
+document.querySelector('.buy-premium').onclick = function(event){
+ 
+ console.log("clicked")
+ let token = localStorage.getItem('token')
+ axios.get(serverURI+'/purchase/premium',{
+  headers:{
+    'Authorization':token
+  }
+ })
+
+}
+
+

@@ -31,7 +31,7 @@ exports.getAll = (req,res,next)=>{
 
 exports.removeExpenseById = (req,res,next)=>{
     console.log("Expense to delete ",req.params,"body : ",req.body)
-    Expense.findByPk(req.user.id).then(expense=>{
+    Expense.findByPk(req.params.id).then(expense=>{
         return expense.destroy()
     }).then((d)=>{
         res.json(d)

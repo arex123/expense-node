@@ -8,7 +8,8 @@ const User = require('./models/Users')
 const Expense = require('./models/expense')
 
 const app = express()
-const sequelize = require('./utils/database')
+const sequelize = require('./utils/database');
+const Order = require('./models/orders');
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -25,6 +26,12 @@ app.use('/expense',expenseRouter)
 //create relation
 User.hasMany(Expense)
 Expense.belongsTo(User)
+
+
+
+//creating relationship between user and its order
+User.hasMany(Order)
+Order.belongsTo(User)
 
 sequelize
 .sync()
