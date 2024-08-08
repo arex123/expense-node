@@ -3,21 +3,30 @@ const Expense = require("../models/expense");
 const User = require("../models/Users");
 
 exports.showLeaderboard = (req, res, next) => {
+  // User.findAll({
+  //   attributes: [
+  //     "id",
+  //     "name",
+  //    [ sequelize.fn("SUM", sequelize.col("expenses.amount")),
+  //     "totalAmount"],
+  //   ],
+  //   include: [
+  //     {
+  //       model: Expense,
+  //       attributes: [],
+  //     },
+  //   ],
+  //   group:['user.id'],
+  //   order:[['totalAmount','DESC']]
+  // })
   User.findAll({
     attributes: [
       "id",
       "name",
-     [ sequelize.fn("SUM", sequelize.col("expenses.amount")),
-      "totalAmount"],
-    ],
-    include: [
-      {
-        model: Expense,
-        attributes: [],
-      },
+     "totalExpense"
     ],
     group:['user.id'],
-    order:[['totalAmount','DESC']]
+    order:[['totalExpense','DESC']]
   })
     .then((result) => {
       let resultObj = [];

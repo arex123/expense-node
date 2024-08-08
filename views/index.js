@@ -29,6 +29,7 @@ if (!localStorage.getItem("token")) {
         document.getElementById("amount").value = "";
         document.getElementById("description").value = "";
         document.getElementById("category").value = "";
+        showLeaderBoard()
       })
       .catch((error) => console.log("eeeee", error));
   }
@@ -67,11 +68,14 @@ if (!localStorage.getItem("token")) {
         .then((d) => {
           console.log("deleted ", d);
           userList.removeChild(event.target.parentElement);
+          showLeaderBoard()
         })
         .catch((e) => console.log("error while deleting ", e));
     });
 
     editBtn.addEventListener("click", function (event) {
+      let token = localStorage.getItem("token");
+
       axios
         .delete(serverURI + "expense/remove/" + event.target.parentElement.id, {
           headers: {
@@ -86,6 +90,7 @@ if (!localStorage.getItem("token")) {
           document.getElementById("description").value =
             userDetails.description;
           document.getElementById("category").value = userDetails.category;
+          showLeaderBoard()
         })
         .catch((e) => console.log("error while deleting ", e));
     });
@@ -174,7 +179,8 @@ if (!localStorage.getItem("token")) {
 
 
 
-  document.querySelector(".leaderboard-btn").onclick = function(){
+  // document.querySelector(".leaderboard-btn").onclick = function(){
+   function showLeaderBoard(){
     let token = localStorage.getItem('token')
     axios.get(serverURI+"premium/showLeaderboard", {
       headers: {
@@ -197,8 +203,8 @@ if (!localStorage.getItem("token")) {
   function displayOnLeaderboard(user){
     let list = document.querySelector('.leaderboard-list')
     let item = document.createElement('li')
-    user.totalAmount = user.totalAmount==null?0:user.totalAmount
-    item.textContent = "Name: "+user.name+" expense: "+user.totalAmount
+    user.totalExpense = user.totalExpense==null?0:user.totalExpense
+    item.textContent = "Name: "+user.name+" expense: "+user.totalExpense
     list.appendChild(item)
   }
 
