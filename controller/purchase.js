@@ -72,7 +72,7 @@ exports.updateTransaction = (req,res,next)=>{
         // })
     }catch(err){
         console.log(err)
-        res.status(401).json({
+        res.status(500).json({
             success:false,
             message:"Transaction failed"
         })

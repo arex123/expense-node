@@ -182,6 +182,7 @@ if (!localStorage.getItem("token")) {
     }})
     .then(result=>{
       console.log(result)
+       document.querySelector('.leaderboard-list').innerHTML=''       
 
       result.data.forEach(element => {
           displayOnLeaderboard(element)
@@ -196,7 +197,8 @@ if (!localStorage.getItem("token")) {
   function displayOnLeaderboard(user){
     let list = document.querySelector('.leaderboard-list')
     let item = document.createElement('li')
-    item.textContent = "Name: "+user.name+" expense: "+user.totalSum
+    user.totalAmount = user.totalAmount==null?0:user.totalAmount
+    item.textContent = "Name: "+user.name+" expense: "+user.totalAmount
     list.appendChild(item)
   }
 
