@@ -13,13 +13,14 @@ const User = sequelize.define("user", {
   email: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique:true
-},
-password: {
+    unique: true,
+  },
+  password: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique:true
+    unique: true,
   },
+  isPremiumUser: { type: Sequelize.BOOLEAN, allowNull:true },
 });
 
-module.exports = User
+module.exports = User;

@@ -6,7 +6,8 @@ const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/purchase/premium', authenticate,purchaseRouter.purchasePremium);
+router.get('/premium', authenticate,purchaseRouter.purchasePremium);
+router.post('/updateTransaction', authenticate,purchaseRouter.updateTransaction);
 
 
 module.exports = router;

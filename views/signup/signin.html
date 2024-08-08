@@ -87,6 +87,9 @@
       referrerpolicy="no-referrer"
     ></script>
     <script>
+      document.querySelector('.createNew').onclick = ()=>{
+        window.location.href = "/user/signup"
+      }
       function handleSubmit(event) {
         event.preventDefault();
         const data = {

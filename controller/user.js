@@ -32,18 +32,14 @@ exports.submitLogin = (req,res,next)=>{
                 }else{
 
                     //create jwt token now
-
-                    
-                    var token = jwt.sign({ id: user.id }, 'SecretAdiKumar');
-
-                    
+                    console.log("secret key ",process.env.tokenSecret)
+                    var token = jwt.sign({ id: user.id }, process.env.tokenSecret);
                     res.status(200).json({
                         success:true,
                         message:"User is succesfuly logged in",
                         token:token
                     })
 
-                    // res.redirect('/expense/')
                 }
             })
 

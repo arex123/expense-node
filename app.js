@@ -4,6 +4,7 @@ const path = require('path');
 
 const userRouter = require('./routes/user')
 const expenseRouter = require('./routes/expense')
+const purchaseRouter = require('./routes/purchase')
 const User = require('./models/Users')
 const Expense = require('./models/expense')
 
@@ -12,6 +13,7 @@ const sequelize = require('./utils/database');
 const Order = require('./models/orders');
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }));
+require('dotenv').config()
 
 
 
@@ -21,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'views'))); //for serving css files
 
 app.use('/user',userRouter)
 app.use('/expense',expenseRouter)
+app.use('/purchase',purchaseRouter)
 
 
 //create relation

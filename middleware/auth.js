@@ -6,14 +6,14 @@ exports.authenticate = (req,res,next)=>{
     try{
         const token = req.header('Authorization')
         console.log("8 token ",token)
-        const user = jwt.verify(token,"SecretAdiKumar")
+        const user = jwt.verify(token,process.env.tokenSecret)
         console.log("user ",user)
 
         User.findByPk(user.id).then(user=>{
             req.user = user
             next()
         }).catch(err=>{
-            console.log("16 err ",error)
+            console.log("16 err ",err)
             throw new Error(err)
         })
 
@@ -24,4 +24,5 @@ exports.authenticate = (req,res,next)=>{
             success:false
         })
     }
+
 }

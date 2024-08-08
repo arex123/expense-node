@@ -21,9 +21,10 @@ exports.submitForm = (req,res,next)=>{
 }
 
 exports.getAll = (req,res,next)=>{
+    console.log("req user ",req.user.isPremiumUser)
     req.user.getExpenses()
     .then(data=>{
-        res.json(data)
+        res.json({data,isPremiumUser:req.user.isPremiumUser})
     }).catch(e=>{
         console.log(e)
     })
