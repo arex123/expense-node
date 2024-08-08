@@ -6,7 +6,7 @@ const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/', expenseRouter.showForm);
+router.get('/',expenseRouter.showForm);
 
 router.post('/submit-form',authenticate, expenseRouter.submitForm);
 

@@ -5,6 +5,8 @@ const path = require('path');
 const userRouter = require('./routes/user')
 const expenseRouter = require('./routes/expense')
 const purchaseRouter = require('./routes/purchase')
+const premiumRoutes = require('./routes/premium')
+
 const User = require('./models/Users')
 const Expense = require('./models/expense')
 
@@ -24,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'views'))); //for serving css files
 app.use('/user',userRouter)
 app.use('/expense',expenseRouter)
 app.use('/purchase',purchaseRouter)
-
+app.use('/premium',premiumRoutes)
 
 //create relation
 User.hasMany(Expense)

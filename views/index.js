@@ -50,7 +50,7 @@ if (!localStorage.getItem("token")) {
     editBtn.appendChild(document.createTextNode("Edit"));
     userItem.appendChild(editBtn);
 
-    const userList = document.querySelector("ul");
+    const userList = document.querySelector(".list-group");
     userList.appendChild(userItem);
 
     deleteBtn.addEventListener("click", function (event) {
@@ -104,6 +104,11 @@ if (!localStorage.getItem("token")) {
         console.log("data ", d);
         if (d.data.isPremiumUser) {
           document.querySelector(".buy-premium").style.display = "none";
+          document.querySelector(".prem-msg").style.display = "block";
+          
+          document.querySelector("#leaderboard").style.display = "block";
+
+
         }
         let details = d.data.data;
         for (let i = 0; i < details.length; i++) {
@@ -112,6 +117,8 @@ if (!localStorage.getItem("token")) {
       })
       .catch((e) => {
         console.log("error ", e);
+        localStorage.removeItem("token");
+        window.location.href = "/user/showLogin";
       });
   });
 
@@ -132,7 +139,7 @@ if (!localStorage.getItem("token")) {
           key: response.data.key_id,
           order_id: response.data.result.id,
           handler: async function (response) {
-            await axios.post(
+            let updateTxn = await axios.post(
               serverURI + "purchase/updateTransaction",
               {
                 order_id: options.order_id,
@@ -140,7 +147,17 @@ if (!localStorage.getItem("token")) {
               },
               { headers: { Authorization: token } }
             );
+            console.log("update txn ",updateTxn)
+
+
             document.querySelector('.buy-premium').style.display='none'
+            document.querySelector(".prem-msg").style.display = "block";
+
+           document.querySelector("#leaderboard").style.display = "block";
+
+           localStorage.setItem('token',updateTxn.data.token)
+
+
             alert("you are a premium user");
           },
         };
@@ -154,4 +171,33 @@ if (!localStorage.getItem("token")) {
         });
       });
   };
+
+
+
+  document.querySelector(".leaderboard-btn").onclick = function(){
+    let token = localStorage.getItem('token')
+    axios.get(serverURI+"premium/showLeaderboard", {
+      headers: {
+      Authorization: token,
+    }})
+    .then(result=>{
+      console.log(result)
+
+      result.data.forEach(element => {
+          displayOnLeaderboard(element)
+      });
+
+
+    })
+    .catch(err=>{
+      console.log(err)
+    })
+  }
+  function displayOnLeaderboard(user){
+    let list = document.querySelector('.leaderboard-list')
+    let item = document.createElement('li')
+    item.textContent = "Name: "+user.name+" expense: "+user.totalSum
+    list.appendChild(item)
+  }
+
 }

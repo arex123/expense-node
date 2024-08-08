@@ -1,7 +1,7 @@
 const Razorpay = require('razorpay');
 const Order = require('../models/orders');
 const User = require('../models/Users');
-
+const jwt = require('jsonwebtoken')
 exports.purchasePremium = (req,res,next)=>{
     try{
         var instance = new Razorpay({
@@ -49,10 +49,13 @@ exports.updateTransaction = (req,res,next)=>{
         .then(result=>{
 
             console.log("Res ",result)
+
+            var token = jwt.sign({ id:req.user.id }, process.env.tokenSecret);
             
             return res.status(202).json({
                 success:true,
-                message:"Transaction successfully"
+                message:"Transaction successfully",
+                token
             })
 
         }).catch(err=>{

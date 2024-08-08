@@ -40,11 +40,19 @@
     .list-group{
         max-width: 100% !important;
     }
+    .prem-msg{
+        display: none;
+    }
+
+    #leaderboard{
+        display: none;
+    }
 </style>
 <body>
     <div class="header">
         <p class="logout">Logout</p>
         <button class="buy-premium ">Buy Premium</button>
+        <p class="prem-msg">You are a premium user</p>
       </div>
       <div class="container">
           <form class="col-md-6" onsubmit="handleExpenseSubmit(event)">
@@ -75,6 +83,13 @@
               <h3>List</h3>
               <ul class="list-group col-md-6"></ul>
           </div>
+      </div>
+
+      <div id="leaderboard">
+
+        <button class="leaderboard-btn">Show leaderboard</button>
+        <ul class="leaderboard-list"></ul>
+
       </div>
     <script src="./index.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
