@@ -9,6 +9,7 @@ const premiumRoutes = require('./routes/premium')
 
 const User = require('./models/Users')
 const Expense = require('./models/expense')
+const ForgotPasswordRequests = require('./models/ForgotPasswordRequests')
 
 const app = express()
 const sequelize = require('./utils/database');
@@ -32,11 +33,12 @@ app.use('/premium',premiumRoutes)
 User.hasMany(Expense)
 Expense.belongsTo(User)
 
-
-
 //creating relationship between user and its order
 User.hasMany(Order)
 Order.belongsTo(User)
+
+User.hasMany(ForgotPasswordRequests)
+ForgotPasswordRequests.belongsTo(User)
 
 sequelize
 .sync()
