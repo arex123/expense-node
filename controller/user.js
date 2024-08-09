@@ -142,46 +142,48 @@ exports.resetpasswordform = (req,res)=>{
 
 }
 
+exports.resetpassword = async (req, res) => {
+    let npassword = req.body.password;
+    let id = req.body.id;
+    console.log("1389", npassword, id);
 
-exports.resetpassword = async(req,res)=>{
-    let npasswaord = req.body.password
-    let id = req.body.id
-    console.log("1389",npasswaord,id)
-
-    try{
-
-        let forgetData = await ForgotPasswordRequests.update({
-            isactive:false
-        },{where:{
-            id:id,isactive:true
-        }})
-        if(!forgetData ){
-        throw new Error("err")
-            
+    try {
+        // Fetch the ForgotPasswordRequest record to get userId
+        let forgetData = await ForgotPasswordRequests.findOne({ where: { id: id, isactive: true } });
+        if (!forgetData) {
+            throw new Error("Password reset request not found or already used");
         }
 
-        let salt=11
-        let hash =await bcrypt.hash(npasswaord,salt)
-        if(!hash){
-            throw new Error("err")
+        // Update isactive to false
+        await ForgotPasswordRequests.update(
+            { isactive: false },
+            { where: { id: id } }
+        );
 
+        // Hash the new password
+        let salt = 11;
+        let hash = await bcrypt.hash(npassword, salt);
+
+        // Update user's password
+        let userData = await User.update(
+            { password: hash },
+            { where: { id: forgetData.userId } }
+        );
+        if (userData[0] === 0) {
+            throw new Error("User password not updated");
         }
-        let userData = await User.update({password:hash},{where:{id:forgetData.userId}})
-        if(!userData){
-            throw new Error("err")
 
-        }
-
+        // Respond with success
         res.status(200).json({
-            success:true,
-            message:"Password updated"
-        })
+            success: true,
+            message: "Password updated"
+        });
 
-
-
-
-    }catch(err){
-        console.log("errr ",err)
+    } catch (err) {
+        console.log("errr ", err);
+        res.status(500).json({
+            success: false,
+            message: err.message || "Internal Server Error"
+        });
     }
-
-}
+};
