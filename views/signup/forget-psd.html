@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    html{
+        height: 100%;
+    }
+    body{
+        height: 100%;
+    }
+    .psd-forget-container{
+        min-height: 100%;
+        display: flex;
+        padding-top: 100px;
+        justify-content: center;
+    }
+    .psd-forget-container>div {
+    
+        height: 100%;
+      width: 38%;
+    }
+    #email-id {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      background-color: #4caf50;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .inner-forget-form {
+      border-radius: 5px;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+    .h2-title{
+        text-align: center;
+    }
+  </style>
+  <body>
+    <div class="psd-forget-container">
+      <div>
+        <h2 class="h2-title">Forget Password</h2>
+        <div class="inner-forget-form">
+          <form onsubmit="handleForgetForm(event)" method="post">
+            <input
+              type="email"
+              id="email-id"
+              name="email"
+              placeholder="Enter Email.."
+            />
+            <input type="submit" value="Submit" />
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js" integrity="sha512-zJXKBryKlsiDaWcWQ9fuvy50SG03/Qc5SqfLXxHmk9XiUUbcD9lXYjHDBxLFOuZSU6ULXaJ69bd7blSMEgxXNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+      async function handleForgetForm(event) {
+        event.preventDefault();
+        console.log("eve: ",event, event.target.email.value);
+        try{
+
+            let result = await axios.post("http://localhost:3002/user/password/forgotpassword",{email:event.target.email.value})
+            if(!result){
+                console.log("82 failed",result)
+                throw new Error("not found")
+            }
+            console.log("succ ",result)
+            console.log(result)
+        }catch(err){
+            console.log(err)
+        }
+      }
+    </script>
+  </body>
+</html>

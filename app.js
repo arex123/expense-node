@@ -19,7 +19,7 @@ require('dotenv').config()
 
 
 
-app.use(express.static(path.join(__dirname, 'views'))); //for serving css files
+app.use(express.static(path.join(__dirname, 'views'))); //for serving html,css files openly
 
 
 

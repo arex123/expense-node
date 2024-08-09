@@ -71,3 +71,40 @@ exports.createUser=(req,res)=>{
         })
     })
 }
+
+var SibApiV3Sdk = require('sib-api-v3-sdk');
+const { param } = require('../routes/user');
+//referece: https://app.brevo.com/settings/keys/api, https://developers.brevo.com/reference/sendtransacemail
+
+exports.forgetPsd = (req,res)=>{
+    console.log("sending email for forget psd: ",req.body,req.body.email)
+    var defaultClient = SibApiV3Sdk.ApiClient.instance;
+    var apiKey = defaultClient.authentications['api-key'];
+    apiKey.apiKey = process.env.email_api_key
+
+    let tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi()
+
+    const sender = {
+        email:'iwanttoearn01@gmail.com'
+    }
+    const recievers = [{
+        // email:'aditya.connect0@gmail.com'
+        email:req.body.email
+    }]
+
+
+    tranEmailApi.sendTransacEmail({
+        sender,
+        to:recievers,
+        subject:"Reset Password Link",
+        textContent:`Reset your password click here: {{params.link}}`,
+        params:{
+            link:"google.com"
+        }
+    }).then((result)=>{
+        console.log("r:",result)
+    }).catch(e=>{
+        console.log(e)
+    })
+
+}
