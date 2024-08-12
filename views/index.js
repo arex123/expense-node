@@ -115,7 +115,8 @@ if (!localStorage.getItem("token")) {
 
 
         }
-        let details = d.data.data;
+        
+        let details = d.data.expenses;
         for (let i = 0; i < details.length; i++) {
           displayUserOnScreen(details[i]);
         }

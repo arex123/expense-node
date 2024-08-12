@@ -70,17 +70,34 @@ exports.submitForm = async (req, res, next) => {
   }
 };
 
-exports.getAll = (req, res, next) => {
+exports.getAll = async (req, res, next) => {
   console.log("req user ", req.user.isPremiumUser);
-  req.user
-    .getExpenses()
-    .then((data) => {
-      res.json({ data, isPremiumUser: req.user.isPremiumUser });
-    })
-    .catch((e) => {
-      console.log(e);
+
+  let page = parseInt(req.query.page) || 1; 
+  let limit = 2;  
+  let offset = (page - 1) * limit; 
+
+  try {
+    const expenseCount = await req.user.countExpenses();  // Get the total count of expenses
+
+    const expenses = await req.user.getExpenses({
+      offset,
+      limit
     });
+
+    res.json({
+      expenses,
+      expenseCount,
+      isPremiumUser: req.user.isPremiumUser,
+      currentPage: page,
+      totalPages: Math.ceil(expenseCount / limit)
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: 'Failed to retrieve expenses' });
+  }
 };
+
 
 exports.removeExpenseById = async (req, res, next) => {
   console.log("Expense to delete ", req.params, "body : ", req.body);
