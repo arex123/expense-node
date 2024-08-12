@@ -99,7 +99,9 @@ exports.forgetPsd =async (req,res)=>{
     
     
 
-    let forgetdata = await ForgotPasswordRequests.create({id:uniqueId,userId:user.id,isactive:true})
+    // let forgetdata = await ForgotPasswordRequests.create({id:uniqueId,isactive:true})
+    let forgetdata = await user.createForgotPasswordRequest({id:uniqueId,isactive:true})
+    // let forgetdata = await ForgotPasswordRequests.create({id:uniqueId,userID:user.id,isactive:true})
     if(!forgetdata){
         throw new Error("err")
 

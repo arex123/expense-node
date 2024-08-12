@@ -2,6 +2,11 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const path = require('path');
 
+
+const app = express()
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+require('dotenv').config()
 const userRouter = require('./routes/user')
 const expenseRouter = require('./routes/expense')
 const purchaseRouter = require('./routes/purchase')
@@ -11,12 +16,9 @@ const User = require('./models/Users')
 const Expense = require('./models/expense')
 const ForgotPasswordRequests = require('./models/ForgotPasswordRequests')
 
-const app = express()
 const sequelize = require('./utils/database');
 const Order = require('./models/orders');
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }));
-require('dotenv').config()
+const FilesUploaded = require('./models/FileUploaded');
 
 
 
@@ -39,6 +41,9 @@ Order.belongsTo(User)
 
 User.hasMany(ForgotPasswordRequests)
 ForgotPasswordRequests.belongsTo(User)
+
+User.hasMany(FilesUploaded)
+FilesUploaded.belongsTo(User)
 
 sequelize
 .sync()

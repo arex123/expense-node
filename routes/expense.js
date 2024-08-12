@@ -14,4 +14,6 @@ router.get('/getAll',authenticate,expenseRouter.getAll)
 
 router.delete('/remove/:id',authenticate,expenseRouter.removeExpenseById)
 
+router.get('/download',authenticate,expenseRouter.download)
+
 module.exports = router;

@@ -2,6 +2,33 @@ const path = require("path");
 const Expense = require("../models/expense");
 const sequelize = require("../utils/database");
 const { error } = require("console");
+const { uploadToS3 } = require("../services/s3Services");
+const FilesUploaded = require("../models/FileUploaded");
+
+exports.download = async (req, res, next) => {
+  try {
+    let expenses = await req.user.getExpenses();
+    let stringifyExpense = JSON.stringify(expenses);
+
+    const userId = req.user.id;
+    const fileName = `Expense${userId}/${new Date()}.txt`;
+    const fileUrl = await uploadToS3(fileName, stringifyExpense);
+    if(fileUrl){
+      console.log("req.user ",req.user)
+      await req.user.createFilesUploaded({url:fileUrl})
+    }
+    res.status(200).json({
+      success: true,
+      fileUrl,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      err,
+    });
+  }
+};
+
 exports.showForm = (req, res, next) => {
   res.sendFile(path.join(__dirname, "../views", "index.html"));
 };
@@ -28,17 +55,17 @@ exports.submitForm = async (req, res, next) => {
       { transaction: t }
     );
     if (!upExp) {
-        throw new Error("Failed to create Expense")
+      throw new Error("Failed to create Expense");
     }
     await t.commit();
     res.status(200).json(upExp);
   } catch (err) {
     await t.rollback();
-    console.error('Transaction error:', err);
+    console.error("Transaction error:", err);
 
     res.status(500).json({
       success: false,
-      error: err.message || 'Internal Server Error',
+      error: err.message || "Internal Server Error",
     });
   }
 };
@@ -57,58 +84,56 @@ exports.getAll = (req, res, next) => {
 
 exports.removeExpenseById = async (req, res, next) => {
   console.log("Expense to delete ", req.params, "body : ", req.body);
-  
+
   const t = await sequelize.transaction();
 
-
-  try{
-
-      let expenseData = await Expense.findByPk(req.params.id)
-      if(!expenseData){
-        throw new Error("Expense with given Id not found")
-      }
-      let expenseAmountRemain = Number(req.user.totalExpense) - Number(expenseData.amount)
-      await expenseData.destroy({ transaction: t })
-      let updatedUser = await req.user.update({
-        totalExpense:expenseAmountRemain
-      },{ transaction: t })
-      console.log("updateuser" ,updatedUser)
-      if(!updatedUser){
-        throw new Error("User not updated")
-      }
-
-      await t.commit()
-      res.status(200).json({
-        success:true
-      })
-
-      
+  try {
+    let expenseData = await Expense.findByPk(req.params.id);
+    if (!expenseData) {
+      throw new Error("Expense with given Id not found");
     }
-    catch(err){
-        await t.rollback()
-        console.log("err in removeExpenseById",err.message,err)
-        res.status(500).json({
-            success:false,
-            error:err.message || "Internal Server Error"
-        })
+    let expenseAmountRemain =
+      Number(req.user.totalExpense) - Number(expenseData.amount);
+    await expenseData.destroy({ transaction: t });
+    let updatedUser = await req.user.update(
+      {
+        totalExpense: expenseAmountRemain,
+      },
+      { transaction: t }
+    );
+    console.log("updateuser", updatedUser);
+    if (!updatedUser) {
+      throw new Error("User not updated");
     }
 
+    await t.commit();
+    res.status(200).json({
+      success: true,
+    });
+  } catch (err) {
+    await t.rollback();
+    console.log("err in removeExpenseById", err.message, err);
+    res.status(500).json({
+      success: false,
+      error: err.message || "Internal Server Error",
+    });
+  }
 
-//   let myCExp;
-//   Expense.findByPk(req.params.id)
-//     .then((expense) => {
-//       myCExp = expense;
-//       return req.user.update({
-//         totalExpense: Number(req.user.totalExpense) - Number(expense.amount),
-//       });
-//     })
-//     .then((res) => {
-//       return myCExp.destroy();
-//     })
-//     .then((d) => {
-//       res.json(d);
-//     })
-//     .catch((e) => {
-//       console.log(e);
-//     });
+  //   let myCExp;
+  //   Expense.findByPk(req.params.id)
+  //     .then((expense) => {
+  //       myCExp = expense;
+  //       return req.user.update({
+  //         totalExpense: Number(req.user.totalExpense) - Number(expense.amount),
+  //       });
+  //     })
+  //     .then((res) => {
+  //       return myCExp.destroy();
+  //     })
+  //     .then((d) => {
+  //       res.json(d);
+  //     })
+  //     .catch((e) => {
+  //       console.log(e);
+  //     });
 };

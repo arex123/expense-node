@@ -209,3 +209,27 @@ if (!localStorage.getItem("token")) {
   }
 
 }
+
+async function downloadExpense(){
+  console.log("downloading")
+  try{
+    let token = localStorage.getItem('token')
+    let data = await axios.get(serverURI+"expense/download",{
+      headers:{
+        Authorization:token
+      }
+    })
+    console.log("dfile",data)
+    if(data.status==200){
+      let a = document.createElement('a')
+      a.href = data.data.fileUrl
+      a.download = 'myexpense.csv'
+      a.click()
+    }else{
+      throw new Error(data.data.message)
+    }
+
+  }catch(err){
+    console.log("ere ",err)
+  }
+}
