@@ -1,61 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Expense Tracker</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-</head>
-<style>
-    button{
-        margin: 10px;
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+  </head>
+  <style>
+    button {
+      margin: 10px;
     }
-    .header{
+    .header {
       display: flex;
       background-color: #4caf50;
       display: flex;
       justify-content: flex-end;
     }
     .header p {
-        margin: 10px;
+      font-size: 18px;
+      margin: 10px;
     }
-    .buy-premium{
-        border: none;
-        background: transparent;
-        color: rgb(33,37,41);
-        cursor: pointer;
-        padding: 0;
-        outline: none;
+    .buy-premium {
+      border: none;
+      background: transparent;
+      color: rgb(33, 37, 41);
+      cursor: pointer;
+      padding: 0;
+      outline: none;
     }
-    .logout:hover{
-        color: white;   
-        cursor: pointer;
+    .logout:hover {
+      color: white;
+      cursor: pointer;
     }
-    .container{
-        display: flex;
-        justify-content: space-evenly;
-        margin-top: 50px;
-    }
-
-    .list-group{
-        max-width: 100% !important;
-    }
-    .prem-msg{
-        display: none;
+    .container {
+      display: flex;
+      justify-content: space-evenly;
+      margin-top: 50px;
     }
 
-    #leaderboard{
-        display: none;
+    .list-group {
+      max-width: 100% !important;
     }
-</style>
-<body>
+    .prem-msg {
+      display: none;
+      cursor:not-allowed;
+    }
+
+    #leaderboard {
+      display: none;
+    }
+  </style>
+  <body>
     <div class="header">
+        <button class="buy-premium">Buy Premium</button>
+        <p class="prem-msg">Premium User</p>
         <p class="logout">Logout</p>
-        <button class="buy-premium ">Buy Premium</button>
-        <p class="prem-msg">You are a premium user</p>
-      </div>
-      <div class="container">
-          <form class="col-md-6" onsubmit="handleExpenseSubmit(event)">
+    </div>
+    <div class="container">
+      <!-- <form class="col-md-6" onsubmit="handleExpenseSubmit(event)">
               <div class="form-group">
                   <label for="amount"> Amount
                   </label>
@@ -77,28 +84,33 @@
                       </select>
               </div>
               <button class="btn-primary" type="submit">Submit</button>
-          </form>
+          </form> -->
 
-          <div>
-              <h3>List</h3>
-              <ul class="list-group col-md-6"></ul>
-          </div>
+      <div>
+        <h3>Expenese List</h3>
+        <ul class="list-group col-md-6"></ul>
       </div>
+    </div>
 
-      <div id="leaderboard">
-
-        <button class="leaderboard-btn" onclick="showLeaderBoard()">Show leaderboard</button>
-        <ul class="leaderboard-list"></ul>
-
-      </div>
-      <div id="download-file">
-
-        <button class="download-file" onclick="downloadExpense()">Download</button>
-
-      </div>
+    <div id="leaderboard">
+      <button class="leaderboard-btn" onclick="showLeaderBoard()">
+        Show leaderboard
+      </button>
+      <ul class="leaderboard-list"></ul>
+    </div>
+    <div id="download-file">
+      <button class="download-file" onclick="downloadExpense()">
+        Download
+      </button>
+    </div>
     <script src="./index.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js" integrity="sha512-zJXKBryKlsiDaWcWQ9fuvy50SG03/Qc5SqfLXxHmk9XiUUbcD9lXYjHDBxLFOuZSU6ULXaJ69bd7blSMEgxXNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js"
+      integrity="sha512-zJXKBryKlsiDaWcWQ9fuvy50SG03/Qc5SqfLXxHmk9XiUUbcD9lXYjHDBxLFOuZSU6ULXaJ69bd7blSMEgxXNQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
   </body>
 </html>

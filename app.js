@@ -1,12 +1,25 @@
 const express = require('express')
 const bodyParser = require('body-parser');
 const path = require('path');
-
-
+const cors = require('cors')
+const helmet = require('helmet')
 const app = express()
+const morgan = require('morgan')
+const fs = require('fs')
+app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }));
 require('dotenv').config()
+
+app.use(helmet())
+
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname,'access.log'),
+    {flags:'a'}
+)
+
+app.use(morgan('combined',{stream:accessLogStream}))
+
 const userRouter = require('./routes/user')
 const expenseRouter = require('./routes/expense')
 const purchaseRouter = require('./routes/purchase')
