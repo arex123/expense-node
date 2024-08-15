@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../styles/signin.css">
+    <!-- <meta http-equiv="Content-Security-Policy" content="font-src 'self' data:; img-src 'self' data:; default-src 'self' http://121.0.0:3000/"> -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src *;"> -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' script-src 'self' https://cdnjs.cloudflare.com; font-src 'self' data:; img-src 'self' data:;">
+
+  </head>
+  <body>
+    <div class="container">
+      <h3>Login Form</h3>
+      <form id="signinForm">
+       
+        <label for="email">Enter Email:</label>
+        <input type="email" class="inp" id="email" name="email" />
+
+        <label for="password">Enter Password:</label>
+        <input type="password" class="inp" id="password" name="password" />
+
+        <button type="submit" class="loginbutton">Login</button>
+
+        <p class="createNew">create new account</p>
+        <a class="forget-psd" href="/forget-psd.html">forget password</a>
+
+      </form>
+    </div>
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js"
+    integrity="sha512-zJXKBryKlsiDaWcWQ9fuvy50SG03/Qc5SqfLXxHmk9XiUUbcD9lXYjHDBxLFOuZSU6ULXaJ69bd7blSMEgxXNQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+
+    ></script>
+    <script src="../scripts/signin.js"></script>
+  </body>
+</html>

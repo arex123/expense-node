@@ -6,12 +6,18 @@ const helmet = require('helmet')
 const app = express()
 const morgan = require('morgan')
 const fs = require('fs')
+
+app.use(express.static(path.join(__dirname, 'views'))); //for serving html,css files openly
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }));
 require('dotenv').config()
 
-app.use(helmet())
+// app.use(helmet())
+// app.use(helmet({
+//     contentSecurityPolicy: false
+// }));
+
 
 const accessLogStream = fs.createWriteStream(
     path.join(__dirname,'access.log'),
@@ -34,8 +40,6 @@ const Order = require('./models/orders');
 const FilesUploaded = require('./models/FileUploaded');
 
 
-
-app.use(express.static(path.join(__dirname, 'views'))); //for serving html,css files openly
 
 
 

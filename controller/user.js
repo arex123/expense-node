@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 
 exports.showLogin = (req,res,next)=>{
-    res.sendFile(path.join(__dirname,'../views','signup','signin.html'))
+    res.sendFile(path.join(__dirname,'../views','signin.html'))
 }
 
 exports.submitLogin = (req,res,next)=>{
@@ -51,7 +51,7 @@ exports.submitLogin = (req,res,next)=>{
 
 
 exports.showSignup = (req,res)=>{
-    res.sendFile(path.join(__dirname,'../views','signup','signup.html'))
+    res.sendFile(path.join(__dirname,'../views','signup.html'))
 }
 
 exports.createUser=(req,res)=>{
@@ -130,17 +130,26 @@ exports.forgetPsd =async (req,res)=>{
         }
     }).then((result)=>{
         console.log("r:",result)
+        res.json({
+            success:true,
+        })
     }).catch(e=>{
+        res.json({
+            success:false,
+        })
         console.log(e)
     })
-    }catch(err){
+}catch(err){
+        res.json({
+            success:false,
+        })
         console.log("err ",err)
     }
 }
 
 exports.resetpasswordform = (req,res)=>{
     console.log("1388")
-    res.sendFile(path.join(__dirname,'../views','signup','reset-psd.html'))
+    res.sendFile(path.join(__dirname,'../views','reset-psd.html'))
 
 }
 

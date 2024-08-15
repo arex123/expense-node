@@ -17,7 +17,8 @@
       height: 100%;
       width: 38%;
     }
-    #email-id {
+    #password,
+    #reEnter {
       width: 100%;
       padding: 12px 20px;
       margin: 8px 0;
@@ -27,7 +28,7 @@
       box-sizing: border-box;
     }
 
-    input[type="submit"] {
+    button {
       width: 100%;
       background-color: #4caf50;
       color: white;
@@ -38,7 +39,7 @@
       cursor: pointer;
     }
 
-    input[type="submit"]:hover {
+    button:hover {
       background-color: #45a049;
     }
 
@@ -50,26 +51,36 @@
     .h2-title {
       text-align: center;
     }
+    .error {
+      color: red;
+    }
   </style>
   <body>
     <div class="psd-forget-container">
       <div>
         <h2 class="h2-title">Forget Password</h2>
         <div class="inner-forget-form">
-          <form onsubmit="handleResetForm(event)" method="post">
+          <form onsubmit="handleResetForm(event)">
             <input
               type="password"
               id="password"
               name="password"
               placeholder="Enter Password"
-            />
-            <input
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+              title="Password must be 8 characters including 1 uppercase letter, 1 lowercase letter and numeric characters"
+              required
+              />
+              <input
               type="password"
               id="reEnter"
               name="reEnter"
               placeholder="Confirm Password"
+              required
             />
-            <input type="submit" value="Submit" />
+
+            <span id="errorMessage" class="error"></span><br /><br />
+
+            <button type="submit">Submit</button>
           </form>
         </div>
       </div>
@@ -82,30 +93,40 @@
       referrerpolicy="no-referrer"
     ></script>
     <script>
-      async function handleResetForm(event) {
-        event.preventDefault();
-        const path = window.location.pathname;
+     async function handleResetForm(event) {
+    event.preventDefault();
+    const errorMessage = document.getElementById('errorMessage');
 
-        const pathSegments = path.split("/");
 
-        const id = pathSegments[pathSegments.length - 1];
+    if (event.target.password.value !== event.target.reEnter.value) {
+        errorMessage.textContent = "Passwords do not match!";
+        return false; // Prevent form submission
+    }
 
-        console.log('ijj : ',id); 
+    errorMessage.textContent = ""; // Clear error message if passwords match
 
-        console.log("eve: ", event, event.target.password.value);
-        try{
+    const path = window.location.pathname;
 
-            let result = await axios.post("http://localhost:3002/user/password/resetpassword",{id:id,password:event.target.password.value})
-            if(!result){
-                console.log("82 failed",result)
-                throw new Error("not found")
-            }
-            console.log("succ ",result)
-            console.log(result)
-        }catch(err){
-            console.log(err)
+    const pathSegments = path.split("/");
+
+    const id = pathSegments[pathSegments.length - 1];
+
+    console.log('ijj : ',id); 
+
+    console.log("eve: ", event, event.target.password.value);
+    try{
+
+        let result = await axios.post("http://localhost:3002/user/password/resetpassword",{id:id,password:event.target.password.value})
+        if(!result){
+            throw new Error("not found")
         }
-      }
+        console.log("succ ",result)
+        console.log(result)
+        alert("password changed successfully")
+    }catch(err){
+        console.log(err)
+    }
+  }
     </script>
   </body>
 </html>

@@ -1,0 +1,169 @@
+button {
+    margin: 10px;
+  }
+  .header {
+    display: flex;
+    background-color: #4caf50;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .title-heading{
+    color: black;
+    margin: 10px;
+  }
+  .header div:last-child p {
+    font-size: 18px;
+    margin: 10px;
+  }
+
+  .header div:last-child {
+    display: flex;
+  }
+  .buy-premium {
+    border: none;
+    background: transparent;
+    color: rgb(33, 37, 41);
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+  }
+  .logout:hover {
+    color: white;
+    cursor: pointer;
+  }
+  .container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 50px;
+  }
+
+  .list-group {
+    max-width: 100% !important;
+  }
+
+  .list-group li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .prem-msg {
+    display: none;
+    cursor: not-allowed;
+  }
+
+  #leaderboard {
+    display: none;
+  }
+
+  .exp-list {
+    width: 30%;
+  }
+  .pagination {
+    display: inline-block;
+    
+  }
+
+  .pagination a,#page-items {
+    color: black;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border: 1px solid #ddd;
+  }
+  #page-items {
+    color: black;
+    padding: 4px 0px 4px 10px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border: 1px solid #ddd;
+  }
+
+  .pagination a.active {
+    background-color: #4c57af;
+    color: white;
+    border: 1px solid #514caf;
+  }
+  .active-page {
+    background-color: #4c57af;
+    color: white;
+    border: 1px solid #514caf;
+    cursor: pointer;
+  }
+
+  .pagination a:hover:not(.active-page) {
+    background-color: #ddd;
+    cursor: pointer;
+  }
+  .list-conf{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    display: none;
+    margin-top: 30px;
+  }
+  .empty-list{
+    margin-top: 20px;
+    text-align: center;
+    color: gray;
+  }
+  .leaderboard_page,.home_nav{
+    cursor: pointer;
+  }
+  .leaderboard_page:hover,.home_nav:hover{
+    color: white;
+  }
+
+  .active_nav{
+    color: white;
+  }
+
+  .leaderboard-list{
+    margin-top: 50px;
+  }
+
+  .l_list_item{
+    width: 30%;
+    display: flex;
+    justify-content: space-between;
+
+  }
+
+  .l_list_item div{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .l_list_item div span{
+    margin: 10px;
+  }
+
+  #download-file{
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+  }
+
+  #download-file:hover{
+    cursor: pointer;
+
+  }
+
+  #download-img{
+    object-fit: cover;
+    position: relative;
+    height: 50px;
+    width: 50px;
+    transition: all 0.3s;
+}
+
+#download-img:hover{
+      height: 70px;
+      width: 70px;
+}
+
+.buy-premium:hover{
+    cursor: pointer;
+    color: white;
+}

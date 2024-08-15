@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../styles/index.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div>
+        <h3 class="title-heading">Expense tracker App</h3>
+      </div>
+      <div>
+        <p class="home_nav">Home</p>
+        <div id="leaderboard ">
+          <p class="leaderboard-btn active_nav" onclick="return">
+            Show leaderboard
+          </p>
+        </div>
+        <button class="buy-premium">Buy Premium</button>
+        <p class="prem-msg">Premium User</p>
+        <p class="logout">Logout</p>
+      </div>
+    </div>
+
+    <ul class="leaderboard-list"></ul>
+  </body>
+  <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js"
+  integrity="sha512-zJXKBryKlsiDaWcWQ9fuvy50SG03/Qc5SqfLXxHmk9XiUUbcD9lXYjHDBxLFOuZSU6ULXaJ69bd7blSMEgxXNQ=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+  <script src="../scripts/leaderboard.js"></script>
+</html>

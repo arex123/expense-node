@@ -29,6 +29,10 @@ exports.download = async (req, res, next) => {
   }
 };
 
+exports.leaderboard = (req,res,next)=>{
+  res.sendFile(path.join(__dirname, "../views", "leaderBoard.html"));
+}
+
 exports.showForm = (req, res, next) => {
   res.sendFile(path.join(__dirname, "../views", "index.html"));
 };
@@ -70,12 +74,14 @@ exports.submitForm = async (req, res, next) => {
   }
 };
 
-exports.getAll = async (req, res, next) => {
+exports.products = async (req, res, next) => {
   console.log("req user ", req.user.isPremiumUser);
 
   let page = parseInt(req.query.page) || 1; 
-  let limit = 2;  
+  let limit =  parseInt(req.query.pageItems) || 3;  
   let offset = (page - 1) * limit; 
+
+  console.log("page: ",page," Limit: ",limit)
 
   try {
     const expenseCount = await req.user.countExpenses();  // Get the total count of expenses
@@ -86,11 +92,17 @@ exports.getAll = async (req, res, next) => {
     });
 
     res.json({
-      expenses,
-      expenseCount,
+      products: expenses,
+      pageData:{
+        currentPage: page,
+        hasNextPage:limit*page<expenseCount,
+        nextPage:page+1,
+        hasPrevPage:page>1,
+        prevPage:page-1,
+        expenseCount,        
+        lastPage: Math.ceil(expenseCount / limit)
+      },
       isPremiumUser: req.user.isPremiumUser,
-      currentPage: page,
-      totalPages: Math.ceil(expenseCount / limit)
     });
   } catch (e) {
     console.log(e);

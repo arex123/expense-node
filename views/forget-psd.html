@@ -71,23 +71,8 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js" integrity="sha512-zJXKBryKlsiDaWcWQ9fuvy50SG03/Qc5SqfLXxHmk9XiUUbcD9lXYjHDBxLFOuZSU6ULXaJ69bd7blSMEgxXNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-      async function handleForgetForm(event) {
-        event.preventDefault();
-        console.log("eve: ",event, event.target.email.value);
-        try{
-
-            let result = await axios.post("http://localhost:3002/user/password/forgotpassword",{email:event.target.email.value})
-            if(!result){
-                console.log("82 failed",result)
-                throw new Error("not found")
-            }
-            console.log("succ ",result)
-            console.log(result)
-        }catch(err){
-            console.log(err)
-        }
-      }
+    <script src="./scripts/forget.js">
+     
     </script>
   </body>
 </html>

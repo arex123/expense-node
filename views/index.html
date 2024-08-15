@@ -10,98 +10,96 @@
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="./styles/index.css">
   </head>
-  <style>
-    button {
-      margin: 10px;
-    }
-    .header {
-      display: flex;
-      background-color: #4caf50;
-      display: flex;
-      justify-content: flex-end;
-    }
-    .header p {
-      font-size: 18px;
-      margin: 10px;
-    }
-    .buy-premium {
-      border: none;
-      background: transparent;
-      color: rgb(33, 37, 41);
-      cursor: pointer;
-      padding: 0;
-      outline: none;
-    }
-    .logout:hover {
-      color: white;
-      cursor: pointer;
-    }
-    .container {
-      display: flex;
-      justify-content: space-evenly;
-      margin-top: 50px;
-    }
-
-    .list-group {
-      max-width: 100% !important;
-    }
-    .prem-msg {
-      display: none;
-      cursor:not-allowed;
-    }
-
-    #leaderboard {
-      display: none;
-    }
-  </style>
   <body>
     <div class="header">
-        <button class="buy-premium">Buy Premium</button>
+      <div>
+        <h3 class="title-heading">Expense tracker App</h3>
+      </div>
+      <div>
+        <p class="home_nav active_nav" onclick="return">Home</p>
+        <div id="leaderboard">         
+          <p class="leaderboard_page">Leaderboard</p>
+        </div>
+        <p class="buy-premium">Buy Premium</p>
         <p class="prem-msg">Premium User</p>
         <p class="logout">Logout</p>
+      </div>
     </div>
     <div class="container">
-      <!-- <form class="col-md-6" onsubmit="handleExpenseSubmit(event)">
-              <div class="form-group">
-                  <label for="amount"> Amount
-                  </label>
-                  <input class="form-control" name="amount" type="number" id="amount"/>
-              </div>
-              <div class="form-group">
-                  <label for="description">Description
-                  </label>
-                  <input class="form-control" name="description" id="description" type="text">
-              </div>
-              <div class="form-group">
-                  <label for="category">Category
-                  </label>
-                      <select class="form-control" id="category" name="category">
-                          <option value="movies">Movies</option>
-                          <option value="tour">Tour</option>
-                          <option value="food">Food</option>
-                          <option value="family">Family</option>
-                      </select>
-              </div>
-              <button class="btn-primary" type="submit">Submit</button>
-          </form> -->
+      <form class="col-md-6" onsubmit="handleExpenseSubmit(event)">
+        <div class="form-group">
+          <label for="amount"> Amount </label>
+          <input
+            class="form-control"
+            name="amount"
+            type="number"
+            id="amount"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="description">Description </label>
+          <input
+            class="form-control"
+            name="description"
+            id="description"
+            type="text"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="category">Category </label>
+          <select class="form-control" id="category" name="category" required>
+            <option value="movies">Movies</option>
+            <option value="tour">Tour</option>
+            <option value="food">Food</option>
+            <option value="family">Family</option>
+          </select>
+        </div>
+        <button class="btn-primary" type="submit">Submit</button>
+      </form>
 
-      <div>
+      <div class="exp-list">
         <h3>Expenese List</h3>
         <ul class="list-group col-md-6"></ul>
+
+        <div class="list-conf">
+
+          <div class="pagination">
+            
+          </div>
+
+          <div class="change-page-items">
+              <select name="pageitems" id="page-items">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+              </select>
+          </div>
+        </div>
+        <div class="empty-list">
+          None
+        </div>
       </div>
     </div>
 
-    <div id="leaderboard">
+    <!-- <div id="leaderboard">
       <button class="leaderboard-btn" onclick="showLeaderBoard()">
         Show leaderboard
       </button>
       <ul class="leaderboard-list"></ul>
-    </div>
+    </div> -->
     <div id="download-file">
-      <button class="download-file" onclick="downloadExpense()">
+      <img src="./downloadImg.avif" onclick="downloadExpense()" id="download-img" alt="">
+      <!-- <button class="download-file" onclick="downloadExpense()">
         Download
-      </button>
+
+      </button> -->
     </div>
     <script src="./index.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

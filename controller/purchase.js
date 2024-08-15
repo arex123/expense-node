@@ -9,7 +9,7 @@ exports.purchasePremium = (req,res,next)=>{
             key_secret: process.env.Key_Secret,
         });
 
-        const amount=10000       
+        const amount=100    
         
         instance.orders.create({amount,currency:"INR"},(err,result)=>{
             if(err){
