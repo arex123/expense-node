@@ -104,7 +104,7 @@
         let messageTag = document.createElement('p')
 
         axios
-          .post("http://13.61.32.225:3002/user/signup", data)
+          .post("http://13.61.32.225/user/signup", data)
           .then((result) => {
             console.log(result);
             if(result.data?.error){
