@@ -67,7 +67,7 @@ sequelize
 // .sync({force:true})
 .then(d=>{
 
-    app.listen(3002,()=>{
+    app.listen(process.env.PORT,()=>{
         console.log("server running at 3002 port")
     })
 }).catch(e=>{

@@ -1,4 +1,4 @@
-const serverURI = "http://localhost:3002/";
+const serverURI = "http://13.61.32.225:3002/";
 if (!localStorage.getItem("token")) {
   window.location.href = "/user/showLogin";
 } else {
