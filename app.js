@@ -68,7 +68,7 @@ sequelize
 .then(d=>{
 
     app.listen(process.env.PORT,()=>{
-        console.log("server running at 3002 port")
+        console.log("server running at default 3002 port")
     })
 }).catch(e=>{
     console.log(e)
