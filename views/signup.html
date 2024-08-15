@@ -70,10 +70,12 @@
         <input type="text" class="inp" id="name" name="name" required />
 
         <label for="email">Enter Email:</label>
-        <input type="email" class="inp" id="email" name="email" />
+        <input type="email" class="inp" id="email" name="email" required/>
 
         <label for="password">Enter Password:</label>
-        <input type="password" class="inp" id="password" name="password" />
+        <input type="password" class="inp" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+        title="Password must be 8 characters including 1 uppercase letter, 1 lowercase letter and numeric characters"
+        required/>
 
         <button type="submit" class="signupbutton">Submit</button>
         <p>Already have an account? <span class="loginbtn"> Login</span></p>
