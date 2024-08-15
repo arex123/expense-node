@@ -34,7 +34,7 @@ document.getElementById("signinForm").onsubmit = (event) => {
     .catch((err) => {
       console.log("err ", err);
 
-      messageTag.textContent = err.response.data.message;
+      messageTag.textContent = "something went wrong";
       messageTag.id = "failed";
       loginbuttontag.parentElement.appendChild(messageTag);
 
