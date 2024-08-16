@@ -1,4 +1,5 @@
 const serverURI = "http://13.60.215.235/";
+console.log("hi from aditya")
 if (!localStorage.getItem("token")) {
   window.location.href = "/user/showLogin";
 } else {
@@ -82,7 +83,7 @@ if (!localStorage.getItem("token")) {
         })
         .catch((e) => console.log("error while deleting ", e));
     });
-
+    
     editBtn.addEventListener("click", function (event) {
       let token = localStorage.getItem("token");
 
