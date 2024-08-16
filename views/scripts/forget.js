@@ -3,7 +3,7 @@ async function handleForgetForm(event) {
     console.log("eve: ",event, event.target.email.value);
     try{
 
-        let result = await axios.post("http://13.61.32.225/user/password/forgotpassword",{email:event.target.email.value})
+        let result = await axios.post("http://13.60.215.235/user/password/forgotpassword",{email:event.target.email.value})
         if(!result){
             console.log("82 failed",result)
             throw new Error("not found")

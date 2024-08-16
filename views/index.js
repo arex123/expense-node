@@ -1,4 +1,4 @@
-const serverURI = "http://13.61.32.225/";
+const serverURI = "http://13.60.215.235/";
 if (!localStorage.getItem("token")) {
   window.location.href = "/user/showLogin";
 } else {
@@ -26,7 +26,7 @@ if (!localStorage.getItem("token")) {
       .then((response) => {
         RefreshExpenseList()
 
-        displayUserOnScreen(response.data);
+        // displayUserOnScreen(response.data);
 
         // Clearing the input fields
         document.getElementById("amount").value = "";
@@ -77,7 +77,7 @@ if (!localStorage.getItem("token")) {
         })
         .then((d) => {
           console.log("deleted ", d);
-          userList.removeChild(event.target.parentElement.parentElement);
+          // userList.removeChild(event.target.parentElement.parentElement);
           RefreshExpenseList()
         })
         .catch((e) => console.log("error while deleting ", e));
@@ -95,7 +95,7 @@ if (!localStorage.getItem("token")) {
         .then((d) => {
           console.log("deleted ", d);
 
-          userList.removeChild(event.target.parentElement.parentElement);
+          // userList.removeChild(event.target.parentElement.parentElement);
           document.getElementById("amount").value = userDetails.amount;
           document.getElementById("description").value =
             userDetails.description;

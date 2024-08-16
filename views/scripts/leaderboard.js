@@ -1,4 +1,4 @@
-const serverURI = "http://13.61.32.225/";
+const serverURI = "http://13.60.215.235/";
 document.addEventListener("DOMContentLoaded", () => {
 
     let token = localStorage.getItem('token')
@@ -7,6 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
       Authorization: token,
     }})
     .then(result=>{
+      // if (d.data.isPremiumUser) {
+        document.querySelector(".buy-premium").style.display = "none";
+        document.querySelector(".prem-msg").style.display = "block";
+
+        // document.querySelector("#leaderboard").style.display = "block";
+      // }
       console.log(result)
        document.querySelector('.leaderboard-list').innerHTML=''       
 
