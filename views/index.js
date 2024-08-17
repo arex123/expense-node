@@ -1,4 +1,4 @@
-const serverURI = "http://13.60.215.235/";
+const serverURI = "http://localhost:3002/";
 console.log("hi from aditya ci/cd working")
 if (!localStorage.getItem("token")) {
   window.location.href = "/user/showLogin";

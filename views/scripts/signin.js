@@ -15,7 +15,7 @@ document.getElementById("signinForm").onsubmit = (event) => {
   let messageTag = document.createElement("p");
 
   axios
-    .post("http://13.60.215.235/user/submitLogin", data)
+    .post("http://localhost:3002/user/submitLogin", data)
     .then((result) => {
       console.log(result);
       if (result.data?.error) {
@@ -28,7 +28,7 @@ document.getElementById("signinForm").onsubmit = (event) => {
         }, 3000);
       } else {
         localStorage.setItem("token", result.data.token);
-        window.location.href = "http://13.60.215.235/expense";
+        window.location.href = "http://localhost:3002/expense";
       }
     })
     .catch((err) => {

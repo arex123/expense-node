@@ -1,4 +1,4 @@
-const serverURI = "http://13.60.215.235/";
+const serverURI = "http://localhost:3002/";
 document.addEventListener("DOMContentLoaded", () => {
 
     let token = localStorage.getItem('token')
