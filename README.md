@@ -2,7 +2,7 @@
 
 # Project setup steps:
 
-1] Clone the repository
+1] Clone the repository https://github.com/arex123/expense-node.git
 
 
 2] Project requirements:
