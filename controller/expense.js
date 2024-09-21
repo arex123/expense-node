@@ -1,9 +1,10 @@
 const path = require("path");
 const Expense = require("../models/expense");
-const sequelize = require("../utils/database");
+// const sequelize = require("../utils/database");
 const { error } = require("console");
 const { uploadToS3 } = require("../services/s3Services");
 const FilesUploaded = require("../models/FileUploaded");
+const mongoose = require('mongoose')
 
 exports.download = async (req, res, next) => {
   try {
@@ -38,14 +39,15 @@ exports.showForm = (req, res, next) => {
 };
 
 exports.submitForm = async (req, res, next) => {
-  const t = await sequelize.transaction();
+  const t = await mongoose.startSession();
+  t.startTransaction()
 
   const data = req.body;
 
   try {
-    let result = await req.user.update(
+    let result = await User.updateOne(
       { totalExpense: Number(req.user.totalExpense) + Number(data.amount) },
-      { transaction: t }
+      { session: t }
     );
     if (!result) {
       throw new Error("Failed to update user's total expense");
@@ -114,7 +116,7 @@ exports.products = async (req, res, next) => {
 exports.removeExpenseById = async (req, res, next) => {
   console.log("Expense to delete ", req.params, "body : ", req.body);
 
-  const t = await sequelize.transaction();
+  // const t = await sequelize.transaction();
 
   try {
     let expenseData = await Expense.findByPk(req.params.id);

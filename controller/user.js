@@ -12,7 +12,7 @@ exports.submitLogin = (req,res,next)=>{
 
     let login = req.body
     console.log("login info ",login)
-    User.findAll({where:{email:login.email}}).then(user=>{
+    User.find({where:{email:login.email}}).then(user=>{
         if(user.length==0){
             res.status(404).json({
                 success:false,
@@ -176,7 +176,7 @@ exports.resetpassword = async (req, res) => {
         let hash = await bcrypt.hash(npassword, salt);
 
         // Update user's password
-        let userData = await User.update(
+        let userData = await User.updateOne(
             { password: hash },
             { where: { id: forgetData.userId } }
         );

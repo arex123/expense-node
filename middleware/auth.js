@@ -9,7 +9,7 @@ exports.authenticate = (req,res,next)=>{
         const user = jwt.verify(token,process.env.tokenSecret)
         console.log("user ",user)
 
-        User.findByPk(user.id).then(user=>{
+        User.findById(user.id).then(user=>{
             req.user = user
             next()
         }).catch(err=>{
