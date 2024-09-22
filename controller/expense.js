@@ -39,15 +39,15 @@ exports.showForm = (req, res, next) => {
 };
 
 exports.submitForm = async (req, res, next) => {
-  const t = await mongoose.startSession();
-  t.startTransaction()
+  // const t = await mongoose.startSession();
+  // t.startTransaction()
 
   const data = req.body;
 
   try {
     let result = await User.updateOne(
       { totalExpense: Number(req.user.totalExpense) + Number(data.amount) },
-      { session: t }
+      // { session: t }
     );
     if (!result) {
       throw new Error("Failed to update user's total expense");
@@ -58,15 +58,15 @@ exports.submitForm = async (req, res, next) => {
         description: data.description,
         category: data.category,
       },
-      { transaction: t }
+      // { transaction: t }
     );
     if (!upExp) {
       throw new Error("Failed to create Expense");
     }
-    await t.commit();
+    // await t.commit();
     res.status(200).json(upExp);
   } catch (err) {
-    await t.rollback();
+    // await t.rollback();
     console.error("Transaction error:", err);
 
     res.status(500).json({
