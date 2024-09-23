@@ -10,6 +10,7 @@ const Expense = mongoose.model(
     category: {
       type: String,
     },
+    userId:mongoose.Schema.Types.ObjectId
   })
 );
 

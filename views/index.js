@@ -38,10 +38,11 @@ if (!localStorage.getItem("token")) {
   }
 
   function displayUserOnScreen(userDetails) {
+    console.log("41 usedet ",userDetails)
     const userList = document.querySelector(".list-group");
 
     const userItem = document.createElement("li");
-    userItem.id = userDetails.id;
+    userItem._id = userDetails._id;
     userItem.appendChild(
       document.createTextNode(
         `${userDetails.amount} - ${userDetails.description} - ${userDetails.category}`
@@ -49,7 +50,7 @@ if (!localStorage.getItem("token")) {
     );
 
     let divAroundBtns = document.createElement("div");
-    divAroundBtns.id = userDetails.id;
+    divAroundBtns._id = userDetails._id;
 
     const deleteBtn = document.createElement("button");
     deleteBtn.appendChild(document.createTextNode("Delete"));
@@ -66,12 +67,12 @@ if (!localStorage.getItem("token")) {
     userList.appendChild(userItem);
 
     deleteBtn.addEventListener("click", function (event) {
-      console.log("idd dele: ", event.target.parentElement.id);
+      console.log("idd dele: ", event.target.parentElement._id);
 
       let token = localStorage.getItem("token");
 
       axios
-        .delete(serverURI + "expense/remove/" + event.target.parentElement.id, {
+        .delete(serverURI + "expense/remove/" + event.target.parentElement._id, {
           headers: {
             Authorization: token,
           },
@@ -88,7 +89,7 @@ if (!localStorage.getItem("token")) {
       let token = localStorage.getItem("token");
 
       axios
-        .delete(serverURI + "expense/remove/" + event.target.parentElement.id, {
+        .delete(serverURI + "expense/remove/" + event.target.parentElement._id, {
           headers: {
             Authorization: token,
           },
@@ -237,7 +238,7 @@ if (!localStorage.getItem("token")) {
 
         var options = {
           key: response.data.key_id,
-          order_id: response.data.result.id,
+          order_id: response.data.result._id,
           handler: async function (response) {
             let updateTxn = await axios.post(
               serverURI + "purchase/updateTransaction",

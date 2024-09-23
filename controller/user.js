@@ -8,46 +8,62 @@ exports.showLogin = (req,res,next)=>{
     res.sendFile(path.join(__dirname,'../views','signin.html'))
 }
 
-exports.submitLogin = (req,res,next)=>{
 
-    let login = req.body
-    console.log("login info ",login)
-    User.find({where:{email:login.email}}).then(user=>{
-        if(user.length==0){
-            res.status(404).json({
-                success:false,
-                message:"User not found"
-            })
-        }else{
-            user = user[0]
-            console.log("user from db ",user.password)
-
-            //comparing password with has in db
-            bcrypt.compare(login.password,user.password).then(result=>{
-                console.log("rsult ",result,"user.id: ",user.id)
-                if(result==false){
-                    res.status(401).json({
-                        success:false,
-                        message:"User Not Authorized"
-                    })
-                }else{
-
-                    //create jwt token now
-                    console.log("secret key ",process.env.tokenSecret)
-                    var token = jwt.sign({ id: user.id }, process.env.tokenSecret);
-                    res.status(200).json({
-                        success:true,
-                        message:"User is succesfuly logged in",
-                        token:token
-                    })
-
-                }
-            })
-
-
+exports.submitLogin = (req, res, next) => {
+    const login = req.body;
+    console.log("login info ", login);
+  
+    // Using correct syntax for Mongoose query
+    User.findOne({ email: login.email })
+      .then(user => {
+        if (!user) {
+          // User not found
+          return res.status(404).json({
+            success: false,
+            message: "User not found"
+          });
         }
-    })
-}
+        
+        // User found, now compare password
+        console.log("user from db ", user.password);
+        bcrypt.compare(login.password, user.password)
+          .then(result => {
+            if (!result) {
+              // Password does not match
+              return res.status(401).json({
+                success: false,
+                message: "User Not Authorized"
+              });
+            }
+  
+            // Password matches, create JWT token
+            console.log("secret key ", process.env.tokenSecret);
+            const token = jwt.sign({ id: user._id }, process.env.tokenSecret, { expiresIn: '1h' });
+  
+            res.status(200).json({
+              success: true,
+              message: "User is successfully logged in",
+              token: token
+            });
+          })
+          .catch(err => {
+            // Error during bcrypt compare
+            console.error("Error comparing passwords: ", err);
+            res.status(500).json({
+              success: false,
+              message: "Error during login"
+            });
+          });
+      })
+      .catch(err => {
+        // Error during finding user
+        console.error("Error finding user: ", err);
+        res.status(500).json({
+          success: false,
+          message: "Error during login"
+        });
+      });
+};
 
 
 exports.showSignup = (req,res)=>{
@@ -78,74 +94,73 @@ const ForgotPasswordRequests = require('../models/ForgotPasswordRequests');
 const { where } = require('sequelize');
 //referece: https://app.brevo.com/settings/keys/api, https://developers.brevo.com/reference/sendtransacemail
 
-exports.forgetPsd =async (req,res)=>{
 
-    try{
-
-    
-    console.log("sending email for forget psd: ",req.body,req.body.email)
-    var defaultClient = SibApiV3Sdk.ApiClient.instance;
-    var apiKey = defaultClient.authentications['api-key'];
-    apiKey.apiKey = process.env.email_api_key
-
-    let uniqueId= uuidv4()
-    console.log("uni ",uniqueId)
-    let email=req.body.email
-    //check if user exist with given email 
-    let user = await User.findOne({ where: { email: email } });
-    if(!user){
-        throw new Error("err")
-    }
-    
-    
-
-    // let forgetdata = await ForgotPasswordRequests.create({id:uniqueId,isactive:true})
-    let forgetdata = await user.createForgotPasswordRequest({id:uniqueId,isactive:true})
-    // let forgetdata = await ForgotPasswordRequests.create({id:uniqueId,userID:user.id,isactive:true})
-    if(!forgetdata){
-        throw new Error("err")
-
-    }
-
-
-
-    let tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi()
-
-    const sender = {
-        email:'iwanttoearn01@gmail.com'
-    }
-    const recievers = [{
-        // email:'aditya.connect0@gmail.com'
-        email:req.body.email
-    }]
-
-
-    tranEmailApi.sendTransacEmail({
+exports.forgetPsd = async (req, res) => {
+    try {
+      console.log("Sending email for forget password: ", req.body, req.body.email);
+  
+      // Initialize SendInBlue API client
+      var defaultClient = SibApiV3Sdk.ApiClient.instance;
+      var apiKey = defaultClient.authentications['api-key'];
+      apiKey.apiKey = process.env.email_api_key;
+  
+      let uniqueId = uuidv4();
+      let email = req.body.email;
+      
+      // Check if user exists with the given email
+      let user = await User.findOne({ email: email });
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found"
+        });
+      }
+  
+      // Create a forgot password request for the user
+      let forgetdata = await user.createForgotPasswordRequest({ id: uniqueId, isactive: true });
+      if (!forgetdata) {
+        throw new Error("Could not create forgot password request");
+      }
+  
+      // Prepare and send the transactional email
+      let tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+  
+      const sender = {
+        email: 'iwanttoearn01@gmail.com'
+      };
+      const receivers = [{
+        email: req.body.email
+      }];
+  
+      const resetLink = `${process.env.serverUrl}user/password/resetpasswordform/${uniqueId}`;
+      
+      await tranEmailApi.sendTransacEmail({
         sender,
-        to:recievers,
-        subject:"Reset Password Link",
-        textContent:`Reset your password click here: {{params.link}}`,
-        params:{
-            link:process.env.serverUrl+ "user/password/resetpasswordform/"+uniqueId
+        to: receivers,
+        subject: "Reset Password Link",
+        textContent: `Reset your password by clicking here: {{params.link}}`,
+        params: {
+          link: resetLink
         }
-    }).then((result)=>{
-        console.log("r:",result)
-        res.json({
-            success:true,
-        })
-    }).catch(e=>{
-        res.json({
-            success:false,
-        })
-        console.log(e)
-    })
-}catch(err){
-        res.json({
-            success:false,
-        })
-        console.log("err ",err)
+      });
+  
+      // Success response
+      return res.status(200).json({
+        success: true,
+        message: "Password reset email sent successfully"
+      });
+  
+    } catch (err) {
+      console.error("Error in forgetPsd: ", err);
+  
+      // Error response
+      return res.status(500).json({
+        success: false,
+        message: err.message || "An error occurred while processing the request"
+      });
     }
-}
+  };
+  
 
 exports.resetpasswordform = (req,res)=>{
     console.log("1388")
@@ -154,47 +169,54 @@ exports.resetpasswordform = (req,res)=>{
 }
 
 exports.resetpassword = async (req, res) => {
-    let npassword = req.body.password;
-    let id = req.body.id;
-    console.log("1389", npassword, id);
-
+    let { password: npassword, id } = req.body;
+    console.log("Reset password request for: ", npassword, id);
+  
     try {
-        // Fetch the ForgotPasswordRequest record to get userId
-        let forgetData = await ForgotPasswordRequests.findOne({ where: { id: id, isactive: true } });
-        if (!forgetData) {
-            throw new Error("Password reset request not found or already used");
-        }
-
-        // Update isactive to false
-        await ForgotPasswordRequests.update(
-            { isactive: false },
-            { where: { id: id } }
-        );
-
-        // Hash the new password
-        let salt = 11;
-        let hash = await bcrypt.hash(npassword, salt);
-
-        // Update user's password
-        let userData = await User.updateOne(
-            { password: hash },
-            { where: { id: forgetData.userId } }
-        );
-        if (userData[0] === 0) {
-            throw new Error("User password not updated");
-        }
-
-        // Respond with success
-        res.status(200).json({
-            success: true,
-            message: "Password updated"
+      // Fetch the ForgotPasswordRequest record to get userId
+      let forgetData = await ForgotPasswordRequests.findOne({ id: id, isactive: true });
+      if (!forgetData) {
+        return res.status(404).json({
+          success: false,
+          message: "Password reset request not found or already used"
         });
-
+      }
+  
+      // Update isactive to false
+      await ForgotPasswordRequests.updateOne(
+        { id: id },
+        { isactive: false }
+      );
+  
+      // Hash the new password
+      const saltRounds = 11;
+      let hashedPassword = await bcrypt.hash(npassword, saltRounds);
+  
+      // Update user's password
+      let userData = await User.updateOne(
+        { _id: forgetData.userId }, // Use `_id` for MongoDB
+        { password: hashedPassword }
+      );
+  
+      // Check if any document was updated
+      if (userData.nModified === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "User password could not be updated"
+        });
+      }
+  
+      // Respond with success
+      return res.status(200).json({
+        success: true,
+        message: "Password updated successfully"
+      });
+  
     } catch (err) {
-        console.log("errr ", err);
-        res.status(500).json({
-            success: false,
-            message: err.message || "Internal Server Error"
-        });
+      console.error("Error while resetting password: ", err);
+      res.status(500).json({
+        success: false,
+        message: err.message || "Internal Server Error"
+      });
     }
-};
+  };

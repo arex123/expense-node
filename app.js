@@ -49,18 +49,18 @@ app.use('/purchase',purchaseRouter)
 app.use('/premium',premiumRoutes)
 
 //create relation
-User.hasMany(Expense)
-Expense.belongsTo(User)
+// User.hasMany(Expense)
+// Expense.belongsTo(User)
 
-//creating relationship between user and its order
-User.hasMany(Order)
-Order.belongsTo(User)
+// //creating relationship between user and its order
+// User.hasMany(Order)
+// Order.belongsTo(User)
 
-User.hasMany(ForgotPasswordRequests)
-ForgotPasswordRequests.belongsTo(User)
+// User.hasMany(ForgotPasswordRequests)
+// ForgotPasswordRequests.belongsTo(User)
 
-User.hasMany(FilesUploaded)
-FilesUploaded.belongsTo(User)
+// User.hasMany(FilesUploaded)
+// FilesUploaded.belongsTo(User)
 
 
 mongoose.connect(process.env.mongodbURL).then(res=>{

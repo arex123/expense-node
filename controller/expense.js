@@ -5,27 +5,44 @@ const { error } = require("console");
 const { uploadToS3 } = require("../services/s3Services");
 const FilesUploaded = require("../models/FileUploaded");
 const mongoose = require('mongoose')
+const User = require('../models/Users')
 
 exports.download = async (req, res, next) => {
   try {
-    let expenses = await req.user.getExpenses();
-    let stringifyExpense = JSON.stringify(expenses);
+    // Query expenses for the authenticated user (assuming req.user._id is available)
+    const expenses = await Expense.find({ userId: req.user._id }); 
+    const stringifyExpense = JSON.stringify(expenses);
 
-    const userId = req.user.id;
-    const fileName = `Expense${userId}/${new Date()}.txt`;
+    // Generate filename and upload to S3
+    const userId = req.user._id; // Mongoose uses _id instead of id
+    const fileName = `Expense${userId}/${new Date().toISOString()}.txt`;
     const fileUrl = await uploadToS3(fileName, stringifyExpense);
-    if(fileUrl){
-      console.log("req.user ",req.user)
-      await req.user.createFilesUploaded({url:fileUrl})
+
+    if (fileUrl) {
+      console.log("req.user ", req.user);
+
+      // Create a new file upload entry in the database
+      const fileUploaded = new FilesUploaded({
+        userId: req.user._id, // Link the file to the user
+        url: fileUrl,
+      });
+
+      await fileUploaded.save(); // Save the file upload to the database
+
+      // Optionally add the file reference to the user (if needed in User schema)
+      req.user.filesUploaded.push(fileUploaded._id); // Assuming a reference array exists
+      await req.user.save();
     }
+
     res.status(200).json({
       success: true,
       fileUrl,
     });
   } catch (err) {
+    console.error(err); // Log error for debugging
     res.status(500).json({
       success: false,
-      err,
+      error: err.message || err,
     });
   }
 };
@@ -39,34 +56,45 @@ exports.showForm = (req, res, next) => {
 };
 
 exports.submitForm = async (req, res, next) => {
-  // const t = await mongoose.startSession();
-  // t.startTransaction()
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
   const data = req.body;
 
   try {
+    // Update user's total expense
     let result = await User.updateOne(
-      { totalExpense: Number(req.user.totalExpense) + Number(data.amount) },
-      // { session: t }
+      { _id: req.user._id }, // Use a filter to select the user by their ID
+      { $inc: { totalExpense: Number(data.amount) } }, // Increment the totalExpense field
+      { session } // Pass session for transaction
     );
-    if (!result) {
+    
+    if (!result || result.nModified === 0) {
       throw new Error("Failed to update user's total expense");
     }
-    let upExp = await req.user.createExpense(
-      {
+
+    // Create a new expense record
+    let upExp = await Expense.create(
+      [{
+        userId: req.user._id, // Link the expense to the user
         amount: data.amount,
         description: data.description,
         category: data.category,
-      },
-      // { transaction: t }
+      }],
+      { session } // Pass session for transaction
     );
+
     if (!upExp) {
       throw new Error("Failed to create Expense");
     }
-    // await t.commit();
+
+    await session.commitTransaction();
+    session.endSession();
+
     res.status(200).json(upExp);
   } catch (err) {
-    // await t.rollback();
+    await session.abortTransaction();
+    session.endSession();
     console.error("Transaction error:", err);
 
     res.status(500).json({
@@ -75,81 +103,93 @@ exports.submitForm = async (req, res, next) => {
     });
   }
 };
-
 exports.products = async (req, res, next) => {
-  console.log("req user ", req.user.isPremiumUser);
+  console.log("req user isPremium: ", req.user.isPremiumUser);
 
   let page = parseInt(req.query.page) || 1; 
-  let limit =  parseInt(req.query.pageItems) || 3;  
-  let offset = (page - 1) * limit; 
+  let limit = parseInt(req.query.pageItems) || 3;  
+  let offset = (page - 1) * limit;
 
-  console.log("page: ",page," Limit: ",limit)
+  console.log("Page: ", page, " Limit: ", limit);
 
   try {
-    const expenseCount = await req.user.countExpenses();  // Get the total count of expenses
+    // Get the total count of expenses for the user
+    const expenseCount = await Expense.countDocuments({ userId: req.user._id });
 
-    const expenses = await req.user.getExpenses({
-      offset,
-      limit
-    });
+    // Fetch expenses with pagination
+    const expenses = await Expense.find({ userId: req.user._id })
+      .skip(offset)
+      .limit(limit);
 
+      console.log("12expenses ",expenses)
     res.json({
       products: expenses,
-      pageData:{
+      pageData: {
         currentPage: page,
-        hasNextPage:limit*page<expenseCount,
-        nextPage:page+1,
-        hasPrevPage:page>1,
-        prevPage:page-1,
-        expenseCount,        
+        hasNextPage: limit * page < expenseCount,
+        nextPage: page + 1,
+        hasPrevPage: page > 1,
+        prevPage: page - 1,
+        expenseCount,
         lastPage: Math.ceil(expenseCount / limit)
       },
       isPremiumUser: req.user.isPremiumUser,
     });
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    console.error("Error retrieving expenses: ", error);
     res.status(500).json({ error: 'Failed to retrieve expenses' });
   }
 };
 
-
 exports.removeExpenseById = async (req, res, next) => {
-  console.log("Expense to delete ", req.params, "body : ", req.body);
+  console.log("Expense to delete: ", req.params.id, " Body: ", req.body);
 
-  // const t = await sequelize.transaction();
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
-    let expenseData = await Expense.findByPk(req.params.id);
+    // Find the expense by ID
+    let expenseData = await Expense.findById(req.params.id).session(session);
     if (!expenseData) {
       throw new Error("Expense with given Id not found");
     }
-    let expenseAmountRemain =
-      Number(req.user.totalExpense) - Number(expenseData.amount);
-    await expenseData.destroy({ transaction: t });
-    let updatedUser = await req.user.update(
-      {
-        totalExpense: expenseAmountRemain,
-      },
-      { transaction: t }
+
+    // Calculate the updated total expense
+    let updatedTotalExpense = Number(req.user.totalExpense) - Number(expenseData.amount);
+
+    // Delete the expense
+    await Expense.deleteOne({ _id: req.params.id }).session(session);
+
+    // Update the user's total expense
+    let updatedUser = await User.updateOne(
+      { _id: req.user._id },
+      { totalExpense: updatedTotalExpense },
+      { session }
     );
-    console.log("updateuser", updatedUser);
-    if (!updatedUser) {
-      throw new Error("User not updated");
+
+    if (updatedUser.nModified === 0) {
+      throw new Error("User's total expense not updated");
     }
 
-    await t.commit();
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
+
     res.status(200).json({
       success: true,
+      message: "Expense removed and user updated successfully",
     });
   } catch (err) {
-    await t.rollback();
-    console.log("err in removeExpenseById", err.message, err);
+    await session.abortTransaction();
+    session.endSession();
+
+    console.error("Error in removeExpenseById: ", err);
     res.status(500).json({
       success: false,
       error: err.message || "Internal Server Error",
     });
   }
-
+};
   //   let myCExp;
   //   Expense.findByPk(req.params.id)
   //     .then((expense) => {
@@ -167,4 +207,4 @@ exports.removeExpenseById = async (req, res, next) => {
   //     .catch((e) => {
   //       console.log(e);
   //     });
-};
+// };
