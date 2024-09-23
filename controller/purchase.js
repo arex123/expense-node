@@ -34,8 +34,8 @@ exports.purchasePremium = async (req, res, next) => {
         await newOrder.save();
 
         // Optionally, add the order to the user's order history (if defined in User schema)
-        req.user.orders.push(newOrder._id); // Assuming an 'orders' array exists in the user schema
-        await req.user.save();
+        // req.user.orders.push(newOrder._id); // Assuming an 'orders' array exists in the user schema
+        // await req.user.save();
 
         // Send response with Razorpay order details
         return res.status(201).json({

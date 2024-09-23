@@ -6,6 +6,7 @@ const ForgotPasswordRequests = mongoose.model('forgotPasswordRequest', new Schem
     type: Boolean,
     required: true,
   },
+  uniqueId:String
  
 }));
 

@@ -92,6 +92,7 @@ exports.createUser=(req,res)=>{
 var SibApiV3Sdk = require('sib-api-v3-sdk');
 const ForgotPasswordRequests = require('../models/ForgotPasswordRequests');
 const { where } = require('sequelize');
+const { default: mongoose } = require('mongoose');
 //referece: https://app.brevo.com/settings/keys/api, https://developers.brevo.com/reference/sendtransacemail
 
 
@@ -117,7 +118,8 @@ exports.forgetPsd = async (req, res) => {
       }
   
       // Create a forgot password request for the user
-      let forgetdata = await user.createForgotPasswordRequest({ id: uniqueId, isactive: true });
+      // let forgetdata = await user.createForgotPasswordRequest({ id: uniqueId, isactive: true });
+      let forgetdata = await ForgotPasswordRequests.create({ uniqueId : uniqueId, isactive: true });
       if (!forgetdata) {
         throw new Error("Could not create forgot password request");
       }
@@ -174,7 +176,7 @@ exports.resetpassword = async (req, res) => {
   
     try {
       // Fetch the ForgotPasswordRequest record to get userId
-      let forgetData = await ForgotPasswordRequests.findOne({ id: id, isactive: true });
+      let forgetData = await ForgotPasswordRequests.findOne({ uniqueId: id, isactive: true });
       if (!forgetData) {
         return res.status(404).json({
           success: false,
@@ -184,7 +186,7 @@ exports.resetpassword = async (req, res) => {
   
       // Update isactive to false
       await ForgotPasswordRequests.updateOne(
-        { id: id },
+        { uniqueId: id },
         { isactive: false }
       );
   

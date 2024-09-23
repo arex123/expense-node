@@ -9,14 +9,18 @@ const User = require('../models/Users')
 
 exports.download = async (req, res, next) => {
   try {
-    // Query expenses for the authenticated user (assuming req.user._id is available)
+    console.log("req body ",req.user)
     const expenses = await Expense.find({ userId: req.user._id }); 
+
     const stringifyExpense = JSON.stringify(expenses);
+
+
 
     // Generate filename and upload to S3
     const userId = req.user._id; // Mongoose uses _id instead of id
     const fileName = `Expense${userId}/${new Date().toISOString()}.txt`;
     const fileUrl = await uploadToS3(fileName, stringifyExpense);
+    console.log("stringifyExpense ",stringifyExpense)
 
     if (fileUrl) {
       console.log("req.user ", req.user);
@@ -30,7 +34,7 @@ exports.download = async (req, res, next) => {
       await fileUploaded.save(); // Save the file upload to the database
 
       // Optionally add the file reference to the user (if needed in User schema)
-      req.user.filesUploaded.push(fileUploaded._id); // Assuming a reference array exists
+      // req.user.filesUploaded.push(fileUploaded._id); // Assuming a reference array exists
       await req.user.save();
     }
 
