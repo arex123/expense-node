@@ -108,7 +108,7 @@ exports.submitForm = async (req, res, next) => {
   }
 };
 exports.products = async (req, res, next) => {
-  console.log("req user isPremium: ", req.user.isPremiumUser);
+  console.log("req user isPremium: ", req.user);
 
   let page = parseInt(req.query.page) || 1; 
   let limit = parseInt(req.query.pageItems) || 3;  
